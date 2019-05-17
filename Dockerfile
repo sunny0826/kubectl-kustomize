@@ -1,6 +1,6 @@
 FROM alpine
 
-MAINTAINER sunnydog0826@gmail.com
+LABEL maintainer="sunnydog0826@gmail.com"
 
 ENV KUBE_LATEST_VERSION="v1.14.1"
 
