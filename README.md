@@ -7,6 +7,10 @@
 使用方法：
 
 ```yaml
+kind: pipeline
+name: {your-pipeline-name}
+
+steps:
 - name: Kubernetes 部署
   image: guoxudongdocker/kubectl
   volumes:
