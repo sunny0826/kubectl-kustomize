@@ -23,7 +23,8 @@ steps:
     namespace: {your-namespace}
     timeout: 300
     tag: false
-    name:{your-deployment-name}
+    name: {your-deployment-name}
+    check: true    # 是否开启git变化检查
     
 ---    
 kind: pipeline
