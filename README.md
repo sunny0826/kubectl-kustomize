@@ -16,8 +16,27 @@ steps:
   volumes:
   - name: kube
     path: /root/.kube
+  settings:
+    config: deploy  # 这里使用 kustomize ,详细使用方法请见 https://github.com/kubernetes-sigs/kustomize
+    env: dev
+    image:  {your-docker-registry}
+    namespace: {your-namespace}
+    timeout: 300
+    tag: false
+    name:{your-deployment-name}
+    
+---    
+kind: pipeline
+name: {your-pipeline-name}
+
+steps:
+- name: Kubernetes 部署
+  image: guoxudongdocker/kubectl
+  volumes:
+  - name: kube
+    path: /root/.kube
   commands:
-    - cd deploy/overlays/dev    # 这里使用 kustomize ,详细使用方法请见 https://github.com/kubernetes-sigs/kustomize
+    - cd deploy/overlays/dev    
     - kustomize edit set image {your-docker-registry}:${DRONE_BUILD_NUMBER}
     - kubectl apply -k . && kubedog rollout track deployment {your-deployment-name} -n {your-namespace} -t {your-tomeout}
 
