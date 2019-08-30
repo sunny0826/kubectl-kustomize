@@ -1,7 +1,6 @@
 #!/bin/sh
 
 log(){
-    echo ''
     echo '-------------------------------------'
     echo "$*"
     echo '-------------------------------------'
@@ -12,7 +11,7 @@ log(){
 log "check config file: ${PLUGIN_CONFIG}/deploy/overlays/${PLUGIN_ENV}"
 cd ${PLUGIN_CONFIG}/deploy/overlays/${PLUGIN_ENV}
 
-if [ ! -z "${PLUGIN_TAG}" ]; then
+if [ -z "${PLUGIN_TAG}" ]; then
     log "set tag & image: ${PLUGIN_IMAGE}:${DRONE_TAG}"
     kustomize edit set image ${PLUGIN_IMAGE}:${DRONE_TAG}
 else
