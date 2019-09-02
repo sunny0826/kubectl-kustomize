@@ -15,7 +15,6 @@ RUN apk add --no-cache ca-certificates curl \
  && chmod +x /usr/local/bin/kubedog \
  && chmod +x /bin/script.sh \
  && pip install shyaml \
- && apk del --purge deps \
  && rm /var/cache/apk/*
 
 WORKDIR /root
