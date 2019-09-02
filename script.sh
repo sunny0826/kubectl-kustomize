@@ -18,8 +18,8 @@ deploy(){
         kustomize edit set image ${IMAGE%:*}:${DRONE_BUILD_NUMBER}
     fi
     NAMESPACE=$(cat kustomization.yaml | shyaml get-value namespace)
-    log "+ deploy {${PLUGIN_NAME}} to {$NAMESPACE} timeout: ${PLUGIN_TIMEOUT}s"
-    kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_NAME} -n $NAMESPACE -t ${PLUGIN_TIMEOUT}
+    log "+ deploy {${PLUGIN_MODNAME}} to {$NAMESPACE} timeout: ${PLUGIN_TIMEOUT}s"
+    kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_MODNAME} -n $NAMESPACE -t ${PLUGIN_TIMEOUT}
 }
 
 #FILES=$(cat git.txt)
@@ -28,7 +28,7 @@ FILES=$(cat env.yaml | shyaml get-values checkList)
 
 for element in $FILES
     do
-        if [ $element == ${PLUGIN_NAME} ]; then
+        if [ $element == ${PLUGIN_MODNAME} ]; then
             IS_DEPLOY=true
             break
         fi
@@ -41,7 +41,7 @@ IS_DEPLOY=false
 if ${PLUGIN_CHECK} ; then
     for element in $FILES
     do
-        if [ $element == ${PLUGIN_NAME} ]; then
+        if [ $element == ${PLUGIN_MODNAME} ]; then
             IS_DEPLOY=true
             break
         fi
