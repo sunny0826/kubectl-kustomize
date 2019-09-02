@@ -6,19 +6,19 @@ log(){
 }
 
 deploy(){
-    log "+ check config file: ${PLUGIN_CONFIG}/deploy/overlays/${PLUGIN_ENV}"
-    cd ${PLUGIN_CONFIG}/deploy/overlays/${PLUGIN_ENV}
+    log "+ check config file: ${PLUGIN_CONFIG}"
+    cd ${PLUGIN_CONFIG}
 
-    if [ -z "${PLUGIN_TAG}" ]; then
+    if [ ${DRONE_TAG} ]; then
         log "+ set tag & image: ${PLUGIN_IMAGE}:${DRONE_TAG}"
         kustomize edit set image ${PLUGIN_IMAGE}:${DRONE_TAG}
     else
         log "+ set image: ${PLUGIN_IMAGE}:${DRONE_BUILD_NUMBER}"
         kustomize edit set image ${PLUGIN_IMAGE}:${DRONE_BUILD_NUMBER}
     fi
-
-    log "+ deploy {${PLUGIN_NAME}} to {${PLUGIN_NAMESPACE}} timeout: ${PLUGIN_TIMEOUT}s"
-    kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_NAME} -n ${PLUGIN_NAMESPACE} -t ${PLUGIN_TIMEOUT}
+    NAMESPACE=$(cat kustomization.yaml | shyaml get-values namespace)
+    log "+ deploy {${PLUGIN_NAME}} to {$NAMESPACE} timeout: ${PLUGIN_TIMEOUT}s"
+    kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_NAME} -n $NAMESPACE -t ${PLUGIN_TIMEOUT}
 }
 
 #FILES=$(cat git.txt)
