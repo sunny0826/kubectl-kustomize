@@ -9,14 +9,15 @@ deploy(){
     log "+ check config file: ${PLUGIN_CONFIG}"
     cd ${PLUGIN_CONFIG}
 
+    IMAGE=$(cat ../../base/deployment.yaml | shyaml get-value spec.template.spec.containers.0.image)
     if [ ${DRONE_TAG} ]; then
-        log "+ set tag & image: ${PLUGIN_IMAGE}:${DRONE_TAG}"
-        kustomize edit set image ${PLUGIN_IMAGE}:${DRONE_TAG}
+        log "+ set tag & image: ${IMAGE%:*}:${DRONE_TAG}"
+        kustomize edit set image ${IMAGE%:*}:${DRONE_TAG}
     else
-        log "+ set image: ${PLUGIN_IMAGE}:${DRONE_BUILD_NUMBER}"
-        kustomize edit set image ${PLUGIN_IMAGE}:${DRONE_BUILD_NUMBER}
+        log "+ set image: ${IMAGE%:*}:${DRONE_BUILD_NUMBER}"
+        kustomize edit set image ${IMAGE%:*}:${DRONE_BUILD_NUMBER}
     fi
-    NAMESPACE=$(cat kustomization.yaml | shyaml get-values namespace)
+    NAMESPACE=$(cat kustomization.yaml | shyaml get-value namespace)
     log "+ deploy {${PLUGIN_NAME}} to {$NAMESPACE} timeout: ${PLUGIN_TIMEOUT}s"
     kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_NAME} -n $NAMESPACE -t ${PLUGIN_TIMEOUT}
 }
