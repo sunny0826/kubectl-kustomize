@@ -17,14 +17,10 @@ steps:
   - name: kube
     path: /root/.kube
   settings:
-    config: deploy  # 这里使用 kustomize ,详细使用方法请见 https://github.com/kubernetes-sigs/kustomize
-    env: dev
-    image:  {your-docker-registry}
-    namespace: {your-namespace}
+    check: true
+    config: configure/trivy-ci-test/deploy/overlays/uat  # 这里使用 kustomize ,详细使用方法请见 https://github.com/kubernetes-sigs/kustomize
     timeout: 300
-    tag: false
     name: {your-deployment-name}
-    check: true    # 是否开启git变化检查
     
 ---    
 kind: pipeline
