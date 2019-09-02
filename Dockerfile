@@ -17,6 +17,4 @@ RUN apk update \
  && chmod +x /bin/script.sh \
  && pip install shyaml
 
-WORKDIR /root
-
-ENTRYPOINT ["/bin/script.sh"]
+ENTRYPOINT /bin/script.sh
