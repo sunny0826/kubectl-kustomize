@@ -21,8 +21,20 @@ deploy(){
     kubectl apply -k . && kubedog rollout track deployment ${PLUGIN_NAME} -n ${PLUGIN_NAMESPACE} -t ${PLUGIN_TIMEOUT}
 }
 
-FILES=$(cat git.txt)
-FILES=${FILES//,/ }
+#FILES=$(cat git.txt)
+#FILES=${FILES//,/ }
+FILES=$(cat env.yaml | shyaml get-values checkList)
+
+for element in $FILES
+    do
+        if [ $element == ${PLUGIN_NAME} ]; then
+            IS_DEPLOY=true
+            break
+        fi
+        echo $element
+    done
+
+#echo $FILES
 IS_DEPLOY=false
 
 if ${PLUGIN_CHECK} ; then
